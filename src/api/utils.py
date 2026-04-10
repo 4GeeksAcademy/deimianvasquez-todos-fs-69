@@ -1,5 +1,8 @@
 from flask import jsonify, url_for
 import re
+import os
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 
 EMAIL_PATTERN = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
@@ -58,3 +61,28 @@ def valid_email(email):
         return False
 
     return EMAIL_PATTERN.fullmatch(email) is not None
+
+
+def send_email(subject, recipient, body):
+    sengrid_api_key = (os.getenv("SENDGRID_API_KEY") or "")
+    verified_sender = (os.getenv("SENDGRID_FROM_EMAIL") or "")
+
+    if not sengrid_api_key or not verified_sender:
+        print("Error: Faltan las variables de entorno")
+        return False
+
+    message = Mail(
+        from_email=verified_sender,
+        to_emails=recipient,
+        subject=subject,
+        html_content=body
+    )
+
+    try:
+        sg = SendGridAPIClient(sengrid_api_key)
+        response = sg.send(message)
+        print(f"Status_code: {response.status_code}")
+        return True
+
+    except Exception as error:
+        return False

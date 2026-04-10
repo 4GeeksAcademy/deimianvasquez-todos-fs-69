@@ -4,7 +4,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 from flask import Flask, request, jsonify, url_for, Blueprint
 from sqlalchemy.exc import IntegrityError
 from api.models import db, User
-from api.utils import generate_sitemap, APIException, valid_email
+from api.utils import generate_sitemap, APIException, valid_email, send_email
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 from base64 import b64encode
@@ -111,8 +111,24 @@ def profile():
         return jsonify({"error": f"Error: {error.args}"})
 
 
+@api.route("/example-email", methods=["GET"])
+def send_email_example():
+    try:
+        success = send_email(
+            subject="Test email todos",
+            recipient="dvasquez@4geeksacademy.com",
+            body="<strong> Esta es una prueba de email</strong>"
+        )
+        if success:
+            return jsonify({"message": "Email sending success"}), 200
+        else:
+            return jsonify({"error": "Error sended message"})
+    except Exception as error:
+        return jsonify({"error": f"Error sending email: {error.args}"})
+
+
 """
-    1.- Enviar correos
+    1.- Enviar correos --> listo
     2.- Resetaer contraseña
     3.- Actualizar la contraseña
     4.- Integrar endpoints del todolist
@@ -120,5 +136,6 @@ def profile():
     6.- Todo el frontend
     7.- Desplegar en render
     8.- Usar supabase como base de datos
+    9.- Activar usuario (Confirmación) 
 
 """
