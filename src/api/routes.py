@@ -304,14 +304,12 @@ def activate_account():
         return jsonify({"error": "Fallaste"}), 500
 
 
-"""
-1.- Enviar correos --> listo
-2.- Resetaer contraseña --> listo
-3.- Actualizar la contraseña --> 
-9.- Activar usuario (Confirmación)  --> listo
-5.- Integrar coud images  --> listo
-10.- revisar login, si no esta activo no puede acceder --> listo
+@api.route("/hello", methods=["GET"])
+def hello():
+    return jsonify("hola"), 200
 
+
+"""
 4.- Integrar endpoints del todolist
 6.- Todo el frontend
 7.- Desplegar en render

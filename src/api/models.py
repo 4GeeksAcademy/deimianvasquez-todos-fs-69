@@ -56,3 +56,12 @@ class Todo(db.Model):
     user_id: Mapped[int] = mapped_column(
         ForeignKey("users.id"), nullable=False)
     user: Mapped["User"] = relationship("User", back_populates="todos")
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "label": self.label,
+            "is_done": self.is_done,
+            "created_at": self.created_at.isoformat(),
+            "updated_at": self.updated_at.isoformat(),
+        }
