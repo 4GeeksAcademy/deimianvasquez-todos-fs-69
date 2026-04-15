@@ -16,6 +16,7 @@ from flask_jwt_extended import JWTManager
 # from models import Person
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
+
 static_file_dir = os.path.join(os.path.dirname(
     os.path.realpath(__file__)), '../dist/')
 app = Flask(__name__)
@@ -39,7 +40,9 @@ jwt = JWTManager(app)
 
 
 # add the admin
-setup_admin(app)
+if os.getenv("FLASK_ENV") == "development":
+    setup_admin(app)
+    
 
 # add the admin
 setup_commands(app)
